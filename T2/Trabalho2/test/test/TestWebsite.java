@@ -1,7 +1,7 @@
 /*
     Classe para teste do site: https://www.uni-hamburg.de/
  */
-package test;
+package qualidade;
 
 import static org.junit.Assert.*;
 
@@ -30,7 +30,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class TestWebsite {
     // constants
     public static String SITE_URL = "https://www.uni-hamburg.de/";
-    public static String PATH_DRIVE = "/home/flan/Documents/UFSM/5¬∫ Semestre/Qualidade/selenium-java-3.141.59/geckodriver";
+    public static String PATH_DRIVE = "C:\\Users\\augus\\Documents\\Eclipse\\qualidade\\assets\\Drivers\\geckodriver.exe";
     private static WebDriver driver; // //objeto que contem os metodos que controlam o navegador web
     WebElement element;
 
@@ -48,16 +48,16 @@ public class TestWebsite {
         driver.quit();
     }
     
-    // Testa se o t√≠tulo da p√°gina √© o esperado -> component 1: <title>
+    // Testa se o tÌtulo da p·gina È o esperado -> component 1: <title>
     @Test
     public void testPageTitle () {
-        assertEquals("Universit√§t Hamburg", driver.getTitle());
+        assertEquals("Universit‰t Hamburg", driver.getTitle());
     }
     
-    // testa todas as op√ß√µes dispon√≠veis em um comboBox -> component 2: <select>
+    // testa todas as opÁıes disponÌveis em um comboBox -> component 2: <select>
     @Test
     public void testSelectButton () {
-        // vai para a p√°gina de contato (em ingles)
+        // vai para a p·gina de contato (em ingles)
         driver.navigate().to(SITE_URL + "en/newsroom/presse/kontakt.html");
         Select select = new Select(driver.findElement(By.id("institute")));
         List<WebElement> op = select.getOptions();
@@ -76,7 +76,7 @@ public class TestWebsite {
         driver.navigate().to(SITE_URL); // volta para a home page
     }
     
-    // testa se a quantidade de elementos do select √© o esperado
+    // testa se a quantidade de elementos do select È o esperado
     @Test
     public void testSelectSize () {
         driver.navigate().to(SITE_URL + "en/newsroom/presse/kontakt.html");
@@ -86,7 +86,7 @@ public class TestWebsite {
         driver.navigate().to(SITE_URL); // volta para a home page
     }
     
-    // testa se o but√£o submit da busca existe -> component 3: <input>
+    // testa se o bot„o submit da busca existe -> component 3: <input>
     @Test
     public void testSubmitSearch () {
         WebElement submit = driver.findElement(By.cssSelector("input[type='submit']"));
@@ -100,14 +100,68 @@ public class TestWebsite {
         assertTrue(video != null);
     }
     
-    // testa se o bot√£o de scroll √© exibido na p√°gina -> component 5: <button>
+    // testa se o bot„o de scroll È exibido na p·gina -> component 5: <button>
     @Test
     public void testButtonRollUp () {
         WebElement button = driver.findElement(By.id("scrollTopButton2"));
         assertTrue(button.isDisplayed());
     }
     
+    @Test
+    public void testLinkTwitter () {
+        element = driver.findElement(By.className("twitter"));
+        assertTrue(element.isDisplayed());
+    }
     
+    @Test
+    public void testLinkTwitter2(){
+        element = driver.findElement(By.className("twitter"));
+        String link = element.getAttribute("href");
+        boolean isValid = verificaConexao(link);
+        assertTrue(isValid);
+    }
+    
+    @Test
+    public void testLinkFacebook () {
+        element = driver.findElement(By.className("facebook"));
+        assertTrue(element.isDisplayed());
+    }
+    
+    @Test
+    public void testLinkFacebook2(){
+        element = driver.findElement(By.className("facebook"));
+        String link = element.getAttribute("href");
+        boolean isValid = verificaConexao(link);
+        assertTrue(isValid);
+    }
+    
+    public static boolean verificaConexao(String urlString) {
+        boolean isValid = false;
+        try {
+                URL u = new URL(urlString);
+                HttpURLConnection h = (HttpURLConnection) u.openConnection();
+                h.setRequestMethod("GET");
+                h.connect();
+                if (h.getResponseCode() != HttpURLConnection.HTTP_NOT_FOUND) { //404 HTTP_OK
+                        isValid = true;
+                }
+        } catch (Exception e) {
+
+        }
+        return isValid;
+    }
+    
+    @Test
+    public void testCopyright() {
+    	element = driver.findElement(By.className("copyright"));
+    	assertEquals(element.getText(), "© 2020 Universit‰t Hamburg. Alle Rechte vorbehalten");
+    }
+    
+    @Test
+    public void testField(){
+        element = driver.findElement(By.name("q"));		 
+        assertEquals("", element.getText());
+    }
 
     /*
     @Test
