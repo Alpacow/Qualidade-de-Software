@@ -5,8 +5,10 @@ package test;
 
 import static org.junit.Assert.*;
 
+import org.openqa.selenium.JavascriptExecutor;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -58,6 +61,35 @@ public class TestWebsite {
         return isValid;
     }
     
+    // testa se um video existe -> component 4: <video>
+    @Ignore
+    @Test
+    public void testVideo () throws InterruptedException {
+        element = driver.findElement(By.tagName("video"));
+        assertTrue(element != null);
+        
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("document.getElementsByTagName(\"video\")[1].play();");
+        Thread.sleep(40000);
+        js.executeScript("document.getElementsByTagName(\"video\")[1].pause();");
+        Thread.sleep(4000);
+        js.executeScript("document.getElementsByTagName(\"video\")[1].load();");
+    }
+    
+    // testa se o botão de scroll é exibido na página -> component 5: <button>
+    @Test
+    public void testButtonRollUp () throws InterruptedException {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0, 8000);");
+        Thread.sleep(10000);
+        element = driver.findElement(By.id("scrollTopButton2"));
+        element.click();
+        Thread.sleep(2000);
+        int offset = (int) js.executeScript("return window.pageYOffset;");
+        System.out.println("OFFSEEEEEEEEEEEET: " + offset);
+        assertEquals(0, offset);
+    }
+    
     // Testa se o título da página é o esperado -> component 1: <title>
     @Test
     public void testPageTitle () {
@@ -65,6 +97,7 @@ public class TestWebsite {
     }
 
     // testa todas as opções disponíveis em um comboBox -> component 2: <select>
+    @Ignore
     @Test
     public void testSelectButton () {
         // vai para a página de contato (em ingles)
@@ -87,6 +120,7 @@ public class TestWebsite {
     }
 
     // testa se a quantidade de elementos do select é o esperado
+    @Ignore
     @Test
     public void testSelectSize () {
         driver.navigate().to(SITE_URL + "en/newsroom/presse/kontakt.html");
@@ -97,39 +131,29 @@ public class TestWebsite {
     }
 
     // testa se o botão submit da busca existe -> component 3: <input>
+    @Ignore
     @Test
     public void testSubmitSearch () {
-        WebElement submit = driver.findElement(By.cssSelector("input[type='submit']"));
-        assertTrue(submit != null);
+        element = driver.findElement(By.cssSelector("input[type='submit']"));
+        assertTrue(element != null);
     }
     
+    @Ignore
     @Test
     public void testField(){
         element = driver.findElement(By.name("q"));		 
         assertEquals("", element.getText());
     }
-
-    // testa se um video existe -> component 4: <video>
-    @Test
-    public void testVideoTag () {
-        WebElement video = driver.findElement(By.tagName("video"));
-        assertTrue(video != null);
-    }
-
-    // testa se o botão de scroll é exibido na página -> component 5: <button>
-    @Test
-    public void testButtonRollUp () {
-        WebElement button = driver.findElement(By.id("scrollTopButton2"));
-        assertTrue(button.isDisplayed());
-    }
     
     // component 6: <a>
+    @Ignore
     @Test
     public void testLinkTwitter () {
         element = driver.findElement(By.className("twitter"));
         assertTrue(element.isDisplayed());
     }
     
+    @Ignore
     @Test
     public void testLinkTwitter2(){
         element = driver.findElement(By.className("twitter"));
@@ -138,21 +162,22 @@ public class TestWebsite {
         assertTrue(isValid);
     }
     
+    // testa os links da pagina
+    @Ignore
     @Test
-    public void testLinkFacebook () {
-        element = driver.findElement(By.className("facebook"));
-        assertTrue(element.isDisplayed());
-    }
-    
-    @Test
-    public void testLinkFacebook2(){
-        element = driver.findElement(By.className("facebook"));
-        String link = element.getAttribute("href");
-        boolean isValid = verificaConexao(link);
-        assertTrue(isValid);
+    public void testAllLinks () {
+        List<WebElement> list = new ArrayList();
+        list = driver.findElements(By.tagName("a"));
+        for (WebElement e : list) {
+            String link = e.getAttribute("href");
+            System.out.println(link);
+            boolean isValid = verificaConexao(link);
+            assertTrue(isValid);
+        }
     }
     
     // component 7: <p>
+    @Ignore
     @Test
     public void testCopyright() {
     	element = driver.findElement(By.className("copyright"));
@@ -160,6 +185,7 @@ public class TestWebsite {
     }
     
     // component 8: <footer>
+    @Ignore
     @Test
     public void testFooter () {
     	element = driver.findElement(By.id("fuss"));
